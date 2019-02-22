@@ -14,3 +14,14 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+//CHECKLIST
+$router->get('/checklists/{checklistID}', 'ChecklistController@getChecklist');
+$router->post('/checklists', 'ChecklistController@createChecklist');
+$router->patch('/checklists/{checklistID}', 'ChecklistController@updateChecklist');
+$router->delete('/checklists/{checklistID}', 'ChecklistController@deleteChecklist');
+
+//ITEMS
+$router->get('/checklists/{checklistID}/items', 'ChecklistController@getViaChecklistID');
+$router->post('/checklists/{checklistID}/items', 'ChecklistController@postViaChecklistID');
+
