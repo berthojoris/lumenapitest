@@ -2,6 +2,7 @@
 namespace App;
 use DateTime;
 use Carbon\Carbon;
+use App\Helpers\Output;
 use Illuminate\Database\Eloquent\Model;
 
 class Checklist extends Model {
@@ -17,13 +18,11 @@ class Checklist extends Model {
 
     public function getCreatedAtAttribute($value)
     {
-        $dt = Carbon::createFromFormat('Y-m-d H:i:s', $value);
-        return $dt->format(DateTime::ISO8601);
+        return Output::convertToISO8601($value);
     }
 
     public function getUpdatedAtAttribute($value)
     {
-        $dt = Carbon::createFromFormat('Y-m-d H:i:s', $value);
-        return $dt->format(DateTime::ISO8601);
+        return Output::convertToISO8601($value);
     }
 }
