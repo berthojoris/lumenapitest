@@ -18,7 +18,7 @@ class CreateChecklistTable extends Migration
             $table->string('object_domain');
             $table->string('object_id');
             $table->string('description');
-            $table->string('is_completed')->default(false)->nullable();
+            $table->tinyInteger('is_completed')->default(0);
             $table->string('completed_at')->nullable();
             $table->string('updated_by')->nullable();
             $table->string('due')->nullable();
