@@ -1,12 +1,14 @@
 <?php
-
+namespace App;
+use Illuminate\Database\Eloquent\Model;
 class Checklist extends Model {
     
     protected $guarded = ['id'];
     protected $table = 'checklist';
-    
-    protected function getDateFormat()
+    protected $hidden = ['id'];
+
+    public function getIsCompletedAttribute($value)
     {
-        return 'd.m.Y H:i:s';
+        return ($value === 0) ? false : true;
     }
 }
