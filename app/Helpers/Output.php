@@ -84,6 +84,9 @@ class Output {
                     'last_update_by' => $in['updated_by'],
                     'update_at' => $in['updated_at'],
                     'created_at' => $in['created_at']
+                ],
+                'links' => [
+                    'self' => url('checklists/'.$in['id'])
                 ]
             ]);
         }

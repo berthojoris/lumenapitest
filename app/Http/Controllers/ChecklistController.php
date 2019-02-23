@@ -78,7 +78,6 @@ class ChecklistController extends Controller
 
     public function test()
     {
-        // $checklist = Checklist::paginate(2, ['*'], "page[limit]");
         $checklist = Checklist::paginate(2);
         $checklist->appends(['page[limit]' => 2, 'page[offset]' => 0])->links();
         return Output::list($checklist, 200, 'checklists');
