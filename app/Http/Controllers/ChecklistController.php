@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Checklist;
 use App\Helpers\Output;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ChecklistController extends Controller
 {
@@ -66,11 +67,45 @@ class ChecklistController extends Controller
 
     public function deleteChecklist($checklistID)
     {
-        return "DELETED";
+        $check = Checklist::find($checklistID);
+        if(!empty($check)) {
+            $check->delete();
+            return Output::nocontent(204);
+        } else {
+            return Output::simple(404);
+        }
     }
 
-    public function getChecklist($checklistID)
+    public function test()
     {
-        return "INDEX";
+        // $checklist = Checklist::paginate(2, ['*'], "page[limit]");
+        $checklist = Checklist::paginate(2);
+        $checklist->appends(['page[limit]' => 2, 'page[offset]' => 0])->links();
+        return Output::list($checklist, 200, 'checklists');
+    }
+
+    public function getChecklist(Request $request, Checklist $checklist)
+    {
+        // Query filter : include, filter, sort, fields, page_limit, page_offset
+
+        $checklist = $checklist->newQuery();
+
+        if ($request->has('include')) {
+            
+        }
+
+        if ($request->has('filter')) {
+            $checklist->where('object_domain', $request->input('filter'));
+        }
+
+        if ($request->has('sort')) {
+            $checklist->orderBy('id', $request->input('sort'));
+        }
+
+        if ($request->has('fields')) {
+            $checklist->pluck($request->input('fields'));
+        }
+
+        return $checklist->get();
     }
 }

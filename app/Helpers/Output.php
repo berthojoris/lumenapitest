@@ -3,6 +3,7 @@ namespace App\Helpers;
 
 use DateTime;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 
 class Output {
 
@@ -15,6 +16,11 @@ class Output {
     public static function convertFromISO8601($string)
     {
         return Carbon::parse($string);
+    }
+
+    public static function nocontent($httpcode)
+    {
+        return response()->json([], $httpcode);
     }
 
     public static function simple($httpcode)
@@ -58,5 +64,50 @@ class Output {
             ]
         ];
         return response()->json($output, $httpcode);
+    }
+
+    public static function wrap($data, $type)
+    {
+        $newformat = [];
+        foreach($data as $in) {
+            array_push($newformat, [
+                'type' => $type,
+                'id' => $in['id'],
+                'attributes' => [
+                    'object_domain' => $in['object_domain'],
+                    'object_id' => $in['object_id'],
+                    'description' => $in['description'],
+                    'is_completed' => $in['is_completed'],
+                    'due' => $in['due'],
+                    'urgency' => $in['urgency'],
+                    'completed_at' => $in['completed_at'],
+                    'last_update_by' => $in['updated_by'],
+                    'update_at' => $in['updated_at'],
+                    'created_at' => $in['created_at']
+                ]
+            ]);
+        }
+        return $newformat;
+    }
+
+    public static function list($data, $httpcode, $type)
+    {
+        $output = $data->toArray();
+
+        $response = [
+            'meta' => [
+                'count' => $output['per_page'],
+                'total' => $output['total'],
+            ],
+            'links' => [
+                'first' => $output['first_page_url'],
+                'last' => $output['last_page_url'],
+                'next' => $output['next_page_url'],
+                'prev' => $output['prev_page_url']
+            ],
+            'data' => self::wrap($data, $type)
+        ];
+    
+        return response()->json($response, $httpcode);
     }
 }
