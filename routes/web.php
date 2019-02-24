@@ -17,8 +17,10 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+$router->post('/login','UsersController@authenticate');
+
 //CHECKLIST
-$router->get('/checklists', 'ChecklistController@test');
+$router->get('/checklists', 'ChecklistController@getChecklist');
 $router->post('/checklists', 'ChecklistController@createChecklist');
 $router->patch('/checklists/{checklistID}', 'ChecklistController@updateChecklist');
 $router->delete('/checklists/{checklistID}', 'ChecklistController@deleteChecklist');

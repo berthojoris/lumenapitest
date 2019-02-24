@@ -5,9 +5,15 @@ use App\Checklist;
 use App\Helpers\Output;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Http\Resources\ChecklistResource;
 
 class ChecklistController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function createChecklist(Request $request)
     {
         if ($request->isJson()) {
@@ -76,35 +82,35 @@ class ChecklistController extends Controller
         }
     }
 
-    public function test()
-    {
-        $checklist = Checklist::paginate(2);
-        $checklist->appends(['page[limit]' => 2, 'page[offset]' => 0])->links();
-        return Output::list($checklist, 200, 'checklists');
-    }
-
     public function getChecklist(Request $request, Checklist $checklist)
     {
-        // Query filter : include, filter, sort, fields, page_limit, page_offset
 
-        $checklist = $checklist->newQuery();
+        // return ChecklistResource::collection(Checklist::all());
+        
+        $query = Checklist::Query();
 
-        if ($request->has('include')) {
-            
+        // Sementara query param saya taruh disini aja, bisa di refactor
+
+        if($request->has('sort')) {
+            $query->orderBy('id', $request->input('sort'));
         }
 
-        if ($request->has('filter')) {
-            $checklist->where('object_domain', $request->input('filter'));
+        if($request->has('filter')) {
+            $query->where('object_domain', 'like', '%'.$request->input('filter').'%');
         }
 
-        if ($request->has('sort')) {
-            $checklist->orderBy('id', $request->input('sort'));
+        if($request->has('fields')) {
+            // Gak paham saya param field buat filter data yg mana
         }
 
-        if ($request->has('fields')) {
-            $checklist->pluck($request->input('fields'));
+        if($request->has('include')) {
+            if($request->input('include') == 'items') {
+                
+            }
         }
 
-        return $checklist->get();
+        $result = $query->paginate(2);
+        $result->appends(['page[limit]' => 2, 'page[offset]' => 0]);
+        return Output::list($result, 200, 'checklists');
     }
 }

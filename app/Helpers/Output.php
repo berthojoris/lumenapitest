@@ -4,6 +4,7 @@ namespace App\Helpers;
 use DateTime;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
 class Output {
 
@@ -99,7 +100,7 @@ class Output {
 
         $response = [
             'meta' => [
-                'count' => $output['per_page'],
+                'count' => ($output['total'] == 0) ? 0 : $output['per_page'],
                 'total' => $output['total'],
             ],
             'links' => [
