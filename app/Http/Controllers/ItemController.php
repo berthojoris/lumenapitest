@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Item;
+use App\Checklist;
 use App\Helpers\Output;
 use App\ChecklistHasItem;
 use Illuminate\Http\Request;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller
 {
-    public function createdata(Request $request)
+    public function createdata(Request $request, $checklistID)
     {   
         if ($request->isJson()) {
             
@@ -22,6 +23,8 @@ class ItemController extends Controller
 
                 try {
 
+                    $checklist = Checklist::findOrFail($checklistID);
+
                     $saved = Item::create([
                         'description' => $data['description'],
                         'due' => $data['due'],
@@ -29,7 +32,7 @@ class ItemController extends Controller
                     ]);
 
                     ChecklistHasItem::create([
-                        'checklist_id' => $request->segment(2),
+                        'checklist_id' => $checklistID,
                         'item_id' => $saved->id
                     ]);
 
@@ -49,8 +52,24 @@ class ItemController extends Controller
         }
     }
 
-    public function getdata()
+    public function updatedata(Request $request, $checklistID, $itemID)
     {
-        return "OK";
+        if ($request->isJson()) {
+            $data = $request->input('data.attribute');
+            if(!empty($data)) {
+
+                $item = Item::findOrFail($itemID);
+                $checklist = Checklist::findOrFail($checklistID);
+
+                $updated = $item->update([
+                    'description' => $data['description'],
+                    'due' => $data['due'],
+                    'urgency' => $data['urgency']
+                ]);
+
+                $pass = Item::find($itemID);
+                return Output::checklist($pass, 200);
+            }
+        }
     }
 }

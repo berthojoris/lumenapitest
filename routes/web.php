@@ -28,6 +28,7 @@ $router->delete('/checklists/{checklistID}', 'ChecklistController@deleteChecklis
 //ITEMS
 $router->get('/checklists/{checklistID}/items', 'ItemController@getdata');
 $router->post('/checklists/{checklistID}/items', 'ItemController@createdata');
+$router->patch('/checklists/{checklistID}/items/{itemID}', 'ItemController@updatedata');
 
 $router->get('/test', 'ChecklistController@test');
 
