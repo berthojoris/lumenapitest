@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\ChecklistResource;
+use App\Http\Resources\ChecklistResourceOne;
 
 class ChecklistController extends Controller
 {
@@ -85,8 +86,16 @@ class ChecklistController extends Controller
 
     public function getOneChecklist(Request $request, $checklistID)
     {
-        $result = Checklist::findOrFail($checklistID);
-        return Output::oneRow($result, 200, 'checklists');
+        $result = Checklist::with('checklistItem')->find($checklistID);
+
+        if($request->has('include')) {
+            if($request->input('include') == 'items') {
+                $result = new ChecklistResource($result);
+                return Output::oneWithInclude($result, 200, 'checklists');
+            }
+        } else {
+            return Output::oneRow($result, 200, 'checklists');
+        }
     }
 
     public function getChecklist(Request $request, Checklist $checklist)

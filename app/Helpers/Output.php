@@ -115,6 +115,31 @@ class Output {
         return response()->json($response, $httpcode);
     }
 
+    public static function oneWithInclude($data, $httpcode, $type)
+    {
+        $response = [
+            'type' => $type,
+            'id' => $data['id'],
+            'attributes' => [
+                'object_domain' => $data['object_domain'],
+                'object_id' => $data['object_id'],
+                'description' => $data['description'],
+                'is_completed' => $data['is_completed'],
+                'due' => $data['due'],
+                'urgency' => $data['urgency'],
+                'completed_at' => $data['completed_at'],
+                'last_update_by' => $data['updated_by'],
+                'update_at' => $data['updated_at'],
+                'created_at' => $data['created_at']
+            ],
+            'links' => [
+                'self' => url('checklists/'.$data['id'])
+            ]
+        ];
+    
+        return response()->json($response, $httpcode);
+    }
+
     public static function oneRow($data, $httpcode, $type)
     {
         $output = $data->toArray();

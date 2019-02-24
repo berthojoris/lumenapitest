@@ -3,9 +3,9 @@
 namespace App\Http\Resources;
 
 use App\Http\Resources\ItemResource;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\Resource;
 
-class ChecklistResource extends JsonResource
+class ChecklistResource extends Resource
 {
     public function toArray($request)
     {
