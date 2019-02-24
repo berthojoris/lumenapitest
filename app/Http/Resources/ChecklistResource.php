@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\ItemResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ChecklistResource extends JsonResource
@@ -18,7 +19,8 @@ class ChecklistResource extends JsonResource
             'due' => $this->due,
             'urgency' => $this->urgency,
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at
+            'updated_at' => $this->updated_at,
+            'checklist_item' => ItemResource::collection($this->whenLoaded('checklistItem'))
         ];
     }
 }

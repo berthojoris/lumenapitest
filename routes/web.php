@@ -20,6 +20,7 @@ $router->get('/', function () use ($router) {
 $router->post('/login','UsersController@authenticate');
 
 //CHECKLIST
+$router->get('/checklists/{checklistID}', 'ChecklistController@getOneChecklist');
 $router->get('/checklists', 'ChecklistController@getChecklist');
 $router->post('/checklists', 'ChecklistController@createChecklist');
 $router->patch('/checklists/{checklistID}', 'ChecklistController@updateChecklist');
@@ -29,6 +30,7 @@ $router->delete('/checklists/{checklistID}', 'ChecklistController@deleteChecklis
 $router->get('/checklists/{checklistID}/items', 'ItemController@getdata');
 $router->post('/checklists/{checklistID}/items', 'ItemController@createdata');
 $router->patch('/checklists/{checklistID}/items/{itemID}', 'ItemController@updatedata');
+$router->delete('/checklists/{checklistID}/items/{itemID}', 'ItemController@deletedata');
 
 $router->get('/test', 'ChecklistController@test');
 

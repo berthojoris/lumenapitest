@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Checklist;
 use App\Helpers\Output;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\ChecklistResource;
 
@@ -82,14 +83,17 @@ class ChecklistController extends Controller
         }
     }
 
-    public function getChecklist(Request $request, Checklist $checklist)
+    public function getOneChecklist(Request $request, $checklistID)
     {
+        $result = Checklist::findOrFail($checklistID);
+        return Output::oneRow($result, 200, 'checklists');
+    }
 
-        // return ChecklistResource::collection(Checklist::all());
-        
+    public function getChecklist(Request $request, Checklist $checklist)
+    {   
         $query = Checklist::Query();
 
-        // Sementara query param saya taruh disini aja, bisa di refactor
+        // Sementara query param saya taruh disini aja, nantinya bisa di refactor agar lebih clean
 
         if($request->has('sort')) {
             $query->orderBy('id', $request->input('sort'));
@@ -105,17 +109,16 @@ class ChecklistController extends Controller
 
         if($request->has('include')) {
             if($request->input('include') == 'items') {
-                
+                $query = ChecklistResource::collection($checklist->with('checklistItem')->paginate(2));
+                $result = $query->appends(['page[limit]' => 2, 'page[offset]' => 0]);
+            } else {
+                return Output::simple(400);
             }
+        } else {
+            $result = $query->paginate(2);
+            $result->appends(['page[limit]' => 2, 'page[offset]' => 0]);
         }
 
-        $result = $query->paginate(2);
-        $result->appends(['page[limit]' => 2, 'page[offset]' => 0]);
         return Output::list($result, 200, 'checklists');
-    }
-
-    public function test()
-    {
-        return Checklist::with('jumptable.item')->get();
     }
 }

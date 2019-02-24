@@ -9,7 +9,7 @@ class Checklist extends Model {
     
     protected $guarded = ['id'];
     protected $table = 'checklist';
-    protected $hidden = ['id'];
+    // protected $hidden = ['id'];
 
     public function getIsCompletedAttribute($value)
     {
@@ -26,8 +26,9 @@ class Checklist extends Model {
         return Output::convertToISO8601($value);
     }
 
-    public function jumptable()
+    public function checklistItem()
     {
-    	return $this->hasMany(ChecklistHasItem::class, 'checklist_id', 'id');
+        return $this->hasMany(ChecklistHasItem::class, 'checklist_id', 'id')
+            ->join('item', 'item.id', '=', 'checklist_has_items.checklist_id');
     }
 }

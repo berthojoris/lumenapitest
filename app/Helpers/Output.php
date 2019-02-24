@@ -114,4 +114,31 @@ class Output {
     
         return response()->json($response, $httpcode);
     }
+
+    public static function oneRow($data, $httpcode, $type)
+    {
+        $output = $data->toArray();
+
+        $response = [
+            'type' => $type,
+            'id' => $output['id'],
+            'attributes' => [
+                'object_domain' => $output['object_domain'],
+                'object_id' => $output['object_id'],
+                'description' => $output['description'],
+                'is_completed' => $output['is_completed'],
+                'due' => $output['due'],
+                'urgency' => $output['urgency'],
+                'completed_at' => $output['completed_at'],
+                'last_update_by' => $output['updated_by'],
+                'update_at' => $output['updated_at'],
+                'created_at' => $output['created_at']
+            ],
+            'links' => [
+                'self' => url('checklists/'.$output['id'])
+            ]
+        ];
+    
+        return response()->json($response, $httpcode);
+    }
 }

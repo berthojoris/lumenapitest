@@ -72,4 +72,22 @@ class ItemController extends Controller
             }
         }
     }
+
+    public function deletedata(Request $request, $checklistID, $itemID)
+    {
+        $item = Item::findOrFail($itemID);
+        $checklist = Checklist::findOrFail($checklistID);
+
+        DB::beginTransaction();
+
+        try {
+            DB::table('checklist_has_items')->whereChecklistId($checklistID)->whereItemId($itemID)->delete();
+            $item->delete();
+            DB::commit();
+            return Output::nocontent(204);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
+    }
 }
