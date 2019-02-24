@@ -25,4 +25,9 @@ class Checklist extends Model {
     {
         return Output::convertToISO8601($value);
     }
+
+    public function jumptable()
+    {
+    	return $this->hasMany(ChecklistHasItem::class, 'checklist_id', 'id');
+    }
 }

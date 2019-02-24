@@ -113,4 +113,9 @@ class ChecklistController extends Controller
         $result->appends(['page[limit]' => 2, 'page[offset]' => 0]);
         return Output::list($result, 200, 'checklists');
     }
+
+    public function test()
+    {
+        return Checklist::with('jumptable.item')->get();
+    }
 }

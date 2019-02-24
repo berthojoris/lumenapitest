@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTemplateTable extends Migration
+class CreateChecklistHasItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateTemplateTable extends Migration
      */
     public function up()
     {
-        Schema::create('template', function (Blueprint $table) {
+        Schema::create('checklist_has_items', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('description');
-            $table->integer('due_interval')->unsigned();
-            $table->string('due_unit');
+            $table->integer('checklist_id')->unsigned();
+            $table->integer('item_id')->unsigned();
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateTemplateTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('template');
+        Schema::dropIfExists('checklist_has_items');
     }
 }
